@@ -2,40 +2,67 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
-    <ol id='olTodo'>
-    </ol>
-    <script>
-
-        readTodos();
-        async function readTodos() {
-
-            try {
-                const olTodo = document.getElementById("olTodo")
-                while (olTodo.firstChild) olTodo.removeChild(olTodo.firstChild)
-
-                const result = await fetch("http://localhost:8080/todos", { method: "GET" })
-                const todos = await result.json();
-                todos.forEach(t => {
-
-                    const li = document.createElement("li")
-                    li.textContent = t.text;
-                    li.id = t.id + " --- ";
-                    olTodo.appendChild(li)
-                })
-            }
-            catch (e) {
-                console.log("Error reading the todos.")
-            }
-
-        }
-    </script>
+  <div id="app-2" class="container mt-5">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">﻿RADIOBASE</th>
+          <th scope="col">fecha</th>
+          <th scope="col">region</th>
+          <th scope="col">trafico</th>
+        </tr>
+      </thead>
+      <tbody v-for="(row, key) in todos">
+        <tr>
+          <th scope="row">{{key}}</th>
+          <td>{{row.RADIOBASE}}</td>
+          <td>{{row.fecha}}</td>
+          <td>{{row.region}}</td>
+          <td>{{row.trafico}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script>
+    var app2 = new Vue({
+      el: '#app-2',
+      data: {
+        message: '',
+        todos: [],
+      },
+      methods: {
+        getAll: async function() {
+          try {
+            const result = await fetch("http://localhost:8080/todos", { method: "GET" })
+            this.todos = await result.json();
+            console.log(this.todos);
+          }
+          catch (e) {
+            console.log("Error reading the todos.", e)
+          }
+        },
+      },
+      created: function() {
+        this.getAll();
+      },
+    });
+  </script>
 </body>
 
 </html>
