@@ -8,6 +8,11 @@
   <title>Document</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style>
+    .naranja {
+      background-color: orange;
+    }
+  </style>
 </head>
 
 <body>
@@ -23,9 +28,9 @@
         </tr>
       </thead>
       <tbody v-for="(row, key) in todos">
-        <tr>
+        <tr :class="row.trafico <= 15 ? 'bg-danger' : row.trafico > 15 && row.trafico <= 40 ? 'naranja' : row.trafico > 40 && row.trafico <= 90 ? 'bg-warning' : row.trafico > 90 ? 'bg-success' : 'bg-secondary'">
           <th scope="row">{{key}}</th>
-          <td>{{row.RADIOBASE}}</td>
+          <td>{{row.radiobase}}</td>
           <td>{{row.fecha}}</td>
           <td>{{row.region}}</td>
           <td>{{row.trafico}}</td>
@@ -45,9 +50,10 @@
       data: {
         message: '',
         todos: [],
+        descriptionError: '',
       },
       methods: {
-        getAll: async function() {
+        getAll: async function () {
           try {
             const result = await fetch("http://localhost:8080/todos", { method: "GET" })
             this.todos = await result.json();
@@ -57,9 +63,20 @@
             console.log("Error reading the todos.", e)
           }
         },
+        color: function (val) {
+          console.log(val);
+          return 'bg-success'
+        },
       },
-      created: function() {
+      created: function () {
         this.getAll();
+      },
+      computed: {
+        descriptionFieldClasses: function () {
+          return [
+            { 'has-error': this.descriptionError }
+          ];
+        }
       },
     });
   </script>
