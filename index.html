@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>MY TODO APP</h1>
+    <ol id='olTodo'>
+
+    </ol>
+    <button id='btnCreate'>Add ToDO!</button>
+    <script>
+
+        readTodos();
+        async function readTodos() {
+
+            try {
+                const olTodo = document.getElementById("olTodo")
+                while (olTodo.firstChild) olTodo.removeChild(olTodo.firstChild)
+
+                const result = await fetch("http://localhost:8080/todos", { method: "GET" })
+                const todos = await result.json();
+                todos.forEach(t => {
+
+                    const li = document.createElement("li")
+                    li.textContent = t.text;
+                    li.id = t.id + " --- ";
+                    olTodo.appendChild(li)
+                })
+            }
+            catch (e) {
+                console.log("Error reading the todos.")
+            }
+
+        }
+    </script>
+</body>
+
+</html>
