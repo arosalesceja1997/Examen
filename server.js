@@ -40,7 +40,7 @@ async function connect() {
 
 async function readTodos() {
     try {
-        const results = await pool.query("select * from radiobases_examen limit 100");
+        const results = await pool.query("select * from radiobases_examen limit 10");
         return results.rows;
     }
     catch (e) {
